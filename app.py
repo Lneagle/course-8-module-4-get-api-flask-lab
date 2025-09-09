@@ -1,25 +1,26 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from data import products
 
 app = Flask(__name__)
 
-# TODO: Implement homepage route that returns a welcome message
-
 @app.route("/")
 def home():
-    pass  # TODO: Return a welcome message
-
-# TODO: Implement GET /products route that returns all products or filters by category
+    return make_response({"message": "welcome!"}, 200)
 
 @app.route("/products")
 def get_products():
-    pass  # TODO: Return all products or filter by ?category=
-
-# TODO: Implement GET /products/<id> route that returns a specific product by ID or 404
+    category = request.args.get("category")
+    if category:
+        filtered = [item for item in products if item["category"] == category]
+        return jsonify(filtered), 200
+    return jsonify(products), 200
 
 @app.route("/products/<int:id>")
 def get_product_by_id(id):
-    pass  # TODO: Return product by ID or 404
+    product = next((item for item in products if item["id"] == id), None)
+    if not product:
+        return ("Product not found", 404)
+    return jsonify(product) 
 
 if __name__ == "__main__":
     app.run(debug=True)

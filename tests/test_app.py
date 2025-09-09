@@ -7,6 +7,8 @@ def client():
 
 def test_homepage(client):
     response = client.get("/")
+    print(response)
+    print(response.get_json())
     assert response.status_code == 200
     assert "welcome" in response.get_json()["message"].lower()
 
